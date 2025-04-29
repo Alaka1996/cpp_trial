@@ -13,4 +13,19 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y cppcheck
 
       - name: Run Cppcheck
-        run: cppcheck --enable=all --inconclusive --error-exitcode=1 .
+        run: |
+          cppcheck \
+            --enable=all \
+            --enable=warning \
+            --enable=style \
+            --enable=performance \
+            --enable=portability \
+            --enable=information \
+            --enable=unusedFunction \
+            --enable=missingInclude \
+            --enable=misra \
+            --inconclusive \
+            --std=c99 \
+            --force \
+            --error-exitcode=1 \
+            .
