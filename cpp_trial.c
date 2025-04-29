@@ -1,36 +1,36 @@
 #include <stdio.h>
-#include <string.h>
 
-// MISRA violation: Use of magic numbers, implicit int (no type for function), no prototypes
-foo(a, b)
-{
+int main(void) {
     int arr[5];
-    arr[5] = 10; // Buffer overflow: writing out of bounds
-    return a / b; // Division by zero possible
-}
-
-int main() {
-    int x = 10;
-    int y = 0;
     int i;
 
-    // MISRA violation: implicit conversion from int to char
-    char ch = 300; 
+    // Orange: possible buffer overflow (depends on user input)
+    printf("Enter an index: ");
+    scanf("%d", &i); // i can be any value
+    arr[i] = 10;     // Possible buffer overflow if i < 0 or i > 4
 
-    // MISRA violation: use of ++ in loop condition
-    for (i = 0; i++ < 5;) {
-        printf("Hello %d\n", i);
+    printf("%d\n", arr[i]);
+
+    // Red: definite buffer overflow
+    arr[5] = 20; // Index 5 is out-of-bounds (valid: 0-4)
+
+    // Red: definite division by zero
+    int a = 10, b = 0;
+    int c = a / b; // Always division by zero
+
+    // Orange: possible division by zero (depends on user input)
+    printf("Enter a divisor: ");
+    scanf("%d", &b);
+    int d = a / b;
+
+    // Red: null pointer dereference
+    int *ptr = NULL;
+    *ptr = 100;
+
+    // Grey: unreachable code
+    if (0) {
+        arr[0] = 123;
     }
-
-    // MISRA violation: no braces for if
-    if (x > 5)
-        printf("X is large\n");
-
-    // MISRA violation: use of strcpy (unsafe), magic numbers
-    char buf[4];
-    strcpy(buf, "abcd"); // Buffer overflow
-
-    printf("%d\n", foo(x, y)); // Division by zero
 
     return 0;
 }
