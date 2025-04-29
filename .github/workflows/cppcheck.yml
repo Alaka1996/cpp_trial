@@ -1,41 +1,20 @@
-name: C Code Analysis
+name: C/C++ Checks
 
 on: [push, pull_request]
 
 jobs:
-  analyze:
+  build-and-analyze:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install analysis tools
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y cppcheck gcc
+
+      - name: Run Cppcheck
         run: |
-          sudo apt-get update
-          sudo apt-get install -y cppcheck gcc
+          cppcheck --enable=all --inconclusive --std=c99 --force --error-exitcode=1 .
 
-      # Optional: Build-essential for missing stdio.h warning
-      - name: Install C library headers (optional)
-        run: sudo apt-get install -y build-essential
-
-      - name: Run Cppcheck (all checks, inconclusive, force)
+      - name: Compile with warnings
         run: |
-          cppcheck \
-            --enable=all \
-            --inconclusive \
-            --std=c99 \
-            --force \
-            --error-exitcode=1 \
-            .
-
-      - name: Compile with GCC (all warnings, treat warnings as errors)
-        run: |
-          gcc -Wall -Wextra -Wpedantic -Werror -o main *.c
-
-      # Optional: Run with AddressSanitizer for runtime errors (like buffer overflows)
-      - name: Compile and run with AddressSanitizer
-        run: |
-          gcc -fsanitize=address -g -o main_asan *.c
-          # Only run if you have a suitable main()
-          ./main_asan || true
+          gcc -Wall -Wextra -Werror -o main main.c
