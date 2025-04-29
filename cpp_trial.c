@@ -1,24 +1,27 @@
 #include <stdio.h>
 
-int get_array_value(int *arr, int len, int idx) {
-    if (idx >= 0 && idx < len) {
-        return arr[idx];
+int divide(int a, int b) {
+    // Potential division by zero if b == 0
+    return a / b;
+}
+
+void fill_array(int *arr, int size) {
+    for (int i = 0; i <= size; ++i) { // Off-by-one error: should be i < size
+        arr[i] = i;
     }
-    return -1;
 }
 
 int main() {
-    int my_array[3] = {10, 20, 30};
-    int *ptr = NULL;
-    int index = 3;
+    int numbers[5];
+    int x = 10;
+    int y = 0;
 
-   
-    int value1 = get_array_value(my_array, 3, index);
-    printf("Value1: %d\n", value1);
+    // 1. Division by zero
+    int result = divide(x, y);
+    printf("Result: %d\n", result);
 
-    
-    int value2 = get_array_value(ptr, 3, 1);
-    printf("Value2: %d\n", value2);
+    // 2. Off-by-one buffer overrun
+    fill_array(numbers, 5);
 
     return 0;
 }
