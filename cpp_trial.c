@@ -1,30 +1,36 @@
 #include <stdio.h>
+#include <string.h>
 
-int get_value(int *arr, int size, int idx) {
-    // No check for arr == NULL (null pointer)
-    // No check for idx out of bounds (buffer overrun)
-    return arr[idx];
+// MISRA violation: Use of magic numbers, implicit int (no type for function), no prototypes
+foo(a, b)
+{
+    int arr[5];
+    arr[5] = 10; // Buffer overflow: writing out of bounds
+    return a / b; // Division by zero possible
 }
 
-int divide(int a, int b) {
-    // No check for b == 0 (division by zero)
-    return a / b;
-}
+int main() {
+    int x = 10;
+    int y = 0;
+    int i;
 
-int main(void) {
-    int numbers[3] = {1, 2, 3};
-    int *null_ptr = NULL;
+    // MISRA violation: implicit conversion from int to char
+    char ch = 300; 
 
-    // Buffer overrun: idx is out of bounds
-    int x = get_value(numbers, 3, 5);
+    // MISRA violation: use of ++ in loop condition
+    for (i = 0; i++ < 5;) {
+        printf("Hello %d\n", i);
+    }
 
-    // Null pointer dereference
-    int y = get_value(null_ptr, 3, 1);
+    // MISRA violation: no braces for if
+    if (x > 5)
+        printf("X is large\n");
 
-    // Division by zero
-    int z = divide(10, 0);
+    // MISRA violation: use of strcpy (unsafe), magic numbers
+    char buf[4];
+    strcpy(buf, "abcd"); // Buffer overflow
 
-    printf("%d %d %d\n", x, y, z);
+    printf("%d\n", foo(x, y)); // Division by zero
 
     return 0;
 }
